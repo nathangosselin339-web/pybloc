@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyBloc - Block-Based Python Programming</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🐍 PyBloc - Visual Python Programming</h1>
+            <p class="subtitle">Drag blocks to create Python code!</p>
+        </header>
+
+        <div class="main-content">
+            <!-- Block Palette -->
+            <aside class="block-palette">
+                <h2>Block Palette</h2>
+                
+                <!-- Basic Blocks -->
+                <div class="category">
+                    <div class="category-header" onclick="toggleCategory(this)">
+                        <span>📝 Basic Blocks</span>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="category-content">
+                        <div class="block block-io" draggable="true" data-type="print">
+                            <div class="block-label">Print</div>
+                            <input type="text" placeholder="message" class="block-input" onclick="event.stopPropagation()">
+                        </div>
+                        
+                        <div class="block block-basic" draggable="true" data-type="comment">
+                            <div class="block-label">Comment</div>
+                            <input type="text" placeholder="your comment" class="block-input" onclick="event.stopPropagation()">
+                        </div>
+                        
+                        <div class="block block-basic" draggable="true" data-type="variable">
+                            <div class="block-label">Set Variable</div>
+                            <input type="text" placeholder="var_name" class="block-input small" onclick="event.stopPropagation()">
+                            <span>=</span>
+                            <input type="text" placeholder="value" class="block-input small" onclick="event.stopPropagation()">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Math & Logic Blocks -->
+                <div class="category">
+                    <div class="category-header" onclick="toggleCategory(this)">
+                        <span>🔢 Math & Logic</span>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="category-content">
+                        <div class="block block-math" draggable="true" data-type="math_op">
+                            <div class="block-label">Math Operation</div>
+                            <input type="text" placeholder="result" class="block-input tiny" onclick="event.stopPropagation()">
+                            <span>=</span>
+                            <input type="text" placeholder="left" class="block-input tiny" onclick="event.stopPropagation()">
+                            <select class="block-select" onclick="event.stopPropagation()">
+                                <option value="add">+</option>
+                                <option value="subtract">-</option>
+                                <option value="multiply">×</option>
+                                <option value="divide">÷</option>
+                                <option value="modulo">%</option>
+                                <option value="power">^</option>
+                            </select>
+                            <input type="text" placeholder="right" class="block-input tiny" onclick="event.stopPropagation()">
+                        </div>
+                        
+                        <div class="block block-math" draggable="true" data-type="comparison">
+                            <div class="block-label">Comparison</div>
+                            <input type="text" placeholder="result" class="block-input tiny" onclick="event.stopPropagation()">
+                            <span>=</span>
+                            <input type="text" placeholder="left" class="block-input tiny" onclick="event.stopPropagation()">
+                            <select class="block-select" onclick="event.stopPropagation()">
+                                <option value="equal">==</option>
+                                <option value="not_equal">!=</option>
+                                <option value="greater">></option>
+                                <option value="less"><</option>
+                                <option value="greater_equal">>=</option>
+                                <option value="less_equal"><=</option>
+                            </select>
+                            <input type="text" placeholder="right" class="block-input tiny" onclick="event.stopPropagation()">
+                        </div>
+                        
+                        <div class="block block-math" draggable="true" data-type="logical_op">
+                            <div class="block-label">Logical Operation</div>
+                            <input type="text" placeholder="result" class="block-input tiny" onclick="event.stopPropagation()">
+                            <span>=</span>
+                            <input type="text" placeholder="left" class="block-input tiny" onclick="event.stopPropagation()">
+                            <select class="block-select" onclick="event.stopPropagation()">
+                                <option value="and">AND</option>
+                                <option value="or">OR</option>
+                                <option value="not">NOT</option>
+                            </select>
+                            <input type="text" placeholder="right" class="block-input tiny" onclick="event.stopPropagation()">
+                        </div>
+                        
+                        <div class="block block-math" draggable="true" data-type="random_number">
+                            <div class="block-label">Random Number</div>
+                            <input type="text" placeholder="var" class="block-input tiny" onclick="event.stopPropagation()">
+                            <span>= random(</span>
+                            <input type="text" placeholder="min" class="block-input tiny" onclick="event.stopPropagation()">
+                            <span>,</span>
+                            <input type="text" placeholder="max" class="block-input tiny" onclick="event.stopPropagation()">
+                            <span>)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Control Flow Blocks -->
+                <div class="category">
+                    <div class="category-header" onclick="toggleCategory(this)">
+                        <span>🔄 Control Flow</span>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="category-content">
+                        <div class="block block-control" draggable="true" data-type="if">
+                            <div class="block-label">If Statement</div>
+                            <span>if</span>
+                            <input type="text" placeholder="condition" class="block-input" onclick="event.stopPropagation()">
+                            <span>:</span>
+                        </div>
+                        
+                        <div class="block block-control" draggable="true" data-type="if_else">
+                            <div class="block-label">If/Else Statement</div>
+                            <span>if</span>
+                            <input type="text" placeholder="condition" class="block-input" onclick="event.stopPropagation()">
+                            <span>:</span>
+                        </div>
+                        
+                        <div class="block block-control" draggable="true" data-type="for_loop">
+                            <div class="block-label">For Loop</div>
+                            <span>for</span>
+                            <input type="text" placeholder="i" class="block-input tiny" onclick="event.stopPropagation()">
+                            <span>in range(</span>
+                            <input type="text" placeholder="10" class="block-input tiny" onclick="event.stopPropagation()">
+                            <span>):</span>
+                        </div>
+                        
+                        <div class="block block-control" draggable="true" data-type="while_loop">
+                            <div class="block-label">While Loop</div>
+                            <span>while</span>
+                            <input type="text" placeholder="condition" class="block-input" onclick="event.stopPropagation()">
+                            <span>:</span>
+                        </div>
+                        
+                        <div class="block block-control" draggable="true" data-type="break">
+                            <div class="block-label">Break</div>
+                            <span>break</span>
+                        </div>
+                        
+                        <div class="block block-control" draggable="true" data-type="continue">
+                            <div class="block-label">Continue</div>
+                            <span>continue</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Structure Blocks -->
+                <div class="category">
+                    <div class="category-header" onclick="toggleCategory(this)">
+                        <span>📦 Data Structures</span>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="category-content">
+                        <div class="block block-data" draggable="true" data-type="create_list">
+                            <div class="block-label">Create List</div>
+                            <input type="text" placeholder="my_list" class="block-input small" onclick="event.stopPropagation()">
+                            <span>= [</span>
+                            <input type="text" placeholder="items" class="block-input small" onclick="event.stopPropagation()">
+                            <span>]</span>
+                        </div>
+                        
+                        <div class="block block-data" draggable="true" data-type="add_to_list">
+                            <div class="block-label">Add to List</div>
+                            <input type="text" placeholder="my_list" class="block-input small" onclick="event.stopPropagation()">
+                            <span>.append(</span>
+                            <input type="text" placeholder="item" class="block-input small" onclick="event.stopPropagation()">
+                            <span>)</span>
+                        </div>
+                        
+                        <div class="block block-data" draggable="true" data-type="get_from_list">
+                            <div class="block-label">Get from List</div>
+                            <input type="text" placeholder="item" class="block-input tiny" onclick="event.stopPropagation()">
+                            <span>=</span>
+                            <input type="text" placeholder="my_list" class="block-input tiny" onclick="event.stopPropagation()">
+                            <span>[</span>
+                            <input type="text" placeholder="0" class="block-input tiny" onclick="event.stopPropagation()">
+                            <span>]</span>
+                        </div>
+                        
+                        <div class="block block-data" draggable="true" data-type="list_length">
+                            <div class="block-label">List Length</div>
+                            <input type="text" placeholder="length" class="block-input small" onclick="event.stopPropagation()">
+                            <span>= len(</span>
+                            <input type="text" placeholder="my_list" class="block-input small" onclick="event.stopPropagation()">
+                            <span>)</span>
+                        </div>
+                        
+                        <div class="block block-data" draggable="true" data-type="create_dict">
+                            <div class="block-label">Create Dictionary</div>
+                            <input type="text" placeholder="my_dict" class="block-input" onclick="event.stopPropagation()">
+                            <span>= {}</span>
+                        </div>
+                        
+                        <div class="block block-data" draggable="true" data-type="set_dict_item">
+                            <div class="block-label">Set Dict Item</div>
+                            <input type="text" placeholder="my_dict" class="block-input tiny" onclick="event.stopPropagation()">
+                            <span>[</span>
+                            <input type="text" placeholder="key" class="block-input tiny" onclick="event.stopPropagation()">
+                            <span>] =</span>
+                            <input type="text" placeholder="value" class="block-input tiny" onclick="event.stopPropagation()">
+                        </div>
+                        
+                        <div class="block block-data" draggable="true" data-type="get_dict_item">
+                            <div class="block-label">Get Dict Item</div>
+                            <input type="text" placeholder="value" class="block-input tiny" onclick="event.stopPropagation()">
+                            <span>=</span>
+                            <input type="text" placeholder="my_dict" class="block-input tiny" onclick="event.stopPropagation()">
+                            <span>[</span>
+                            <input type="text" placeholder="key" class="block-input tiny" onclick="event.stopPropagation()">
+                            <span>]</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- I/O Blocks -->
+                <div class="category">
+                    <div class="category-header" onclick="toggleCategory(this)">
+                        <span>💬 Input/Output</span>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="category-content">
+                        <div class="block block-io" draggable="true" data-type="get_input">
+                            <div class="block-label">Get Input</div>
+                            <input type="text" placeholder="var" class="block-input small" onclick="event.stopPropagation()">
+                            <span>= input(</span>
+                            <input type="text" placeholder="prompt" class="block-input small" onclick="event.stopPropagation()">
+                            <span>)</span>
+                        </div>
+                        
+                        <div class="block block-io" draggable="true" data-type="print_formatted">
+                            <div class="block-label">Print Formatted</div>
+                            <span>print(f"</span>
+                            <input type="text" placeholder="{variable}" class="block-input" onclick="event.stopPropagation()">
+                            <span>")</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Advanced Blocks -->
+                <div class="category">
+                    <div class="category-header" onclick="toggleCategory(this)">
+                        <span>⚙️ Advanced</span>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="category-content">
+                        <div class="block block-advanced" draggable="true" data-type="define_function">
+                            <div class="block-label">Define Function</div>
+                            <span>def</span>
+                            <input type="text" placeholder="func_name" class="block-input small" onclick="event.stopPropagation()">
+                            <span>(</span>
+                            <input type="text" placeholder="params" class="block-input small" onclick="event.stopPropagation()">
+                            <span>):</span>
+                        </div>
+                        
+                        <div class="block block-advanced" draggable="true" data-type="call_function">
+                            <div class="block-label">Call Function</div>
+                            <input type="text" placeholder="func_name" class="block-input small" onclick="event.stopPropagation()">
+                            <span>(</span>
+                            <input type="text" placeholder="args" class="block-input small" onclick="event.stopPropagation()">
+                            <span>)</span>
+                        </div>
+                        
+                        <div class="block block-advanced" draggable="true" data-type="wait">
+                            <div class="block-label">Wait/Sleep</div>
+                            <span>sleep(</span>
+                            <input type="text" placeholder="1" class="block-input tiny" onclick="event.stopPropagation()">
+                            <span>seconds)</span>
+                        </div>
+                        
+                        <div class="block block-advanced" draggable="true" data-type="try_except">
+                            <div class="block-label">Try/Except</div>
+                            <span>try/except</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Workspace -->
+            <main class="workspace">
+                <div class="workspace-header">
+                    <h2>Workspace</h2>
+                    <div class="workspace-controls">
+                        <button id="runBtn" class="btn btn-primary">▶ Run Code</button>
+                        <button id="clearBtn" class="btn btn-secondary">🗑️ Clear</button>
+                    </div>
+                </div>
+                <div id="workspace" class="drop-zone">
+                    <p class="placeholder">Drag blocks here to start coding!</p>
+                </div>
+            </main>
+
+            <!-- Output Panel -->
+            <aside class="output-panel">
+                <div class="output-header">
+                    <h2>Output</h2>
+                    <button id="clearOutputBtn" class="btn btn-small">Clear</button>
+                </div>
+                <div id="output" class="output-content"></div>
+                
+                <div class="code-header">
+                    <h2>Generated Python Code</h2>
+                    <button id="copyCodeBtn" class="btn btn-small">📋 Copy</button>
+                </div>
+                <pre id="generatedCode" class="code-content"></pre>
+            </aside>
+        </div>
+    </div>
+
+    <script>
+        let draggedBlock = null;
+        let blockIdCounter = 0;
+
+        // Toggle category visibility
+        function toggleCategory(header) {
+            const content = header.nextElementSibling;
+            const arrow = header.querySelector('.arrow');
+            
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+                arrow.textContent = '▼';
+            } else {
+                content.style.display = 'none';
+                arrow.textContent = '▶';
+            }
+        }
+
+        // Drag and drop functionality
+        document.querySelectorAll('.block-palette .block').forEach(block => {
+            block.addEventListener('dragstart', (e) => {
+                // Clone the block
+                const clone = block.cloneNode(true);
+                clone.id = 'block-' + blockIdCounter++;
+                clone.classList.add('workspace-block');
+                
+                // Store for later
+                draggedBlock = clone;
+                
+                e.dataTransfer.effectAllowed = 'copy';
+            });
+        });
+
+        const workspace = document.getElementById('workspace');
+
+        workspace.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'copy';
+        });
+
+        workspace.addEventListener('drop', (e) => {
+            e.preventDefault();
+            
+            if (draggedBlock) {
+                // Remove placeholder if it exists
+                const placeholder = workspace.querySelector('.placeholder');
+                if (placeholder) {
+                    placeholder.remove();
+                }
+                
+                // Add delete button to the block
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'delete-btn';
+                deleteBtn.textContent = '×';
+                const blockToDelete = draggedBlock;  // Capture in closure
+                deleteBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    blockToDelete.remove();
+                    
+                    // Restore placeholder if workspace is empty
+                    if (workspace.children.length === 0) {
+                        const placeholder = document.createElement('p');
+                        placeholder.className = 'placeholder';
+                        placeholder.textContent = 'Drag blocks here to start coding!';
+                        workspace.appendChild(placeholder);
+                    }
+                };
+                draggedBlock.appendChild(deleteBtn);
+                
+                // Make workspace blocks draggable within workspace for reordering
+                draggedBlock.draggable = true;
+                draggedBlock.addEventListener('dragstart', (e) => {
+                    e.stopPropagation();
+                    draggedBlock.classList.add('dragging');
+                });
+                
+                draggedBlock.addEventListener('dragend', (e) => {
+                    draggedBlock.classList.remove('dragging');
+                });
+                
+                workspace.appendChild(draggedBlock);
+                draggedBlock = null;
+            }
+        });
+
+        // Allow reordering blocks within workspace
+        workspace.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            const afterElement = getDragAfterElement(workspace, e.clientY);
+            const dragging = document.querySelector('.dragging');
+            
+            if (dragging && dragging.classList.contains('workspace-block')) {
+                if (afterElement == null) {
+                    workspace.appendChild(dragging);
+                } else {
+                    workspace.insertBefore(dragging, afterElement);
+                }
+            }
+        });
+
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('.workspace-block:not(.dragging)')];
+
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+
+        // Run code
+        document.getElementById('runBtn').addEventListener('click', async () => {
+            const blocks = [];
+            const workspaceBlocks = workspace.querySelectorAll('.workspace-block');
+            
+            workspaceBlocks.forEach(block => {
+                const blockData = extractBlockData(block);
+                if (blockData) {
+                    blocks.push(blockData);
+                }
+            });
+
+            try {
+                const response = await fetch('/execute', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ blocks: blocks })
+                });
+
+                const result = await response.json();
+                const outputDiv = document.getElementById('output');
+                const codeDiv = document.getElementById('generatedCode');
+
+                if (result.success) {
+                    outputDiv.innerHTML = '<div class="success">✓ Code executed successfully!</div>';
+                    if (result.output) {
+                        outputDiv.innerHTML += '<pre>' + escapeHtml(result.output) + '</pre>';
+                    }
+                } else {
+                    outputDiv.innerHTML = '<div class="error">✗ Error occurred!</div>';
+                    outputDiv.innerHTML += '<pre>' + escapeHtml(result.error) + '</pre>';
+                }
+
+                codeDiv.textContent = result.code || '';
+            } catch (error) {
+                document.getElementById('output').innerHTML = 
+                    '<div class="error">✗ Failed to execute: ' + escapeHtml(error.message) + '</div>';
+            }
+        });
+
+        function extractBlockData(block) {
+            const type = block.getAttribute('data-type');
+            const data = { type: type };
+
+            switch(type) {
+                case 'print':
+                    data.value = block.querySelector('input').value || '';
+                    break;
+                    
+                case 'comment':
+                    data.comment = block.querySelector('input').value || '';
+                    break;
+                    
+                case 'variable':
+                    const varInputs = block.querySelectorAll('input');
+                    data.name = varInputs[0].value || 'var';
+                    data.value = varInputs[1].value || '0';
+                    break;
+                    
+                case 'math_op':
+                    const mathInputs = block.querySelectorAll('input');
+                    data.variable = mathInputs[0].value || 'result';
+                    data.left = mathInputs[1].value || '0';
+                    data.operation = block.querySelector('select').value;
+                    data.right = mathInputs[2].value || '0';
+                    break;
+                    
+                case 'comparison':
+                    const compInputs = block.querySelectorAll('input');
+                    data.variable = compInputs[0].value || 'result';
+                    data.left = compInputs[1].value || '0';
+                    data.operation = block.querySelector('select').value;
+                    data.right = compInputs[2].value || '0';
+                    break;
+                    
+                case 'logical_op':
+                    const logicInputs = block.querySelectorAll('input');
+                    data.variable = logicInputs[0].value || 'result';
+                    data.left = logicInputs[1].value || 'True';
+                    data.operation = block.querySelector('select').value;
+                    data.right = logicInputs[2].value || 'True';
+                    break;
+                    
+                case 'random_number':
+                    const randInputs = block.querySelectorAll('input');
+                    data.variable = randInputs[0].value || 'random_num';
+                    data.min = randInputs[1].value || '0';
+                    data.max = randInputs[2].value || '10';
+                    break;
+                    
+                case 'if':
+                    data.condition = block.querySelector('input').value || 'True';
+                    data.blocks = [];
+                    break;
+                    
+                case 'if_else':
+                    data.condition = block.querySelector('input').value || 'True';
+                    data.if_blocks = [];
+                    data.else_blocks = [];
+                    break;
+                    
+                case 'for_loop':
+                    const forInputs = block.querySelectorAll('input');
+                    data.variable = forInputs[0].value || 'i';
+                    data.times = forInputs[1].value || '10';
+                    data.blocks = [];
+                    break;
+                    
+                case 'while_loop':
+                    data.condition = block.querySelector('input').value || 'True';
+                    data.blocks = [];
+                    break;
+                    
+                case 'create_list':
+                    const listInputs = block.querySelectorAll('input');
+                    data.variable = listInputs[0].value || 'my_list';
+                    data.items = listInputs[1].value || '';
+                    break;
+                    
+                case 'add_to_list':
+                    const addInputs = block.querySelectorAll('input');
+                    data.list = addInputs[0].value || 'my_list';
+                    data.item = addInputs[1].value || '0';
+                    break;
+                    
+                case 'get_from_list':
+                    const getInputs = block.querySelectorAll('input');
+                    data.variable = getInputs[0].value || 'item';
+                    data.list = getInputs[1].value || 'my_list';
+                    data.index = getInputs[2].value || '0';
+                    break;
+                    
+                case 'list_length':
+                    const lenInputs = block.querySelectorAll('input');
+                    data.variable = lenInputs[0].value || 'length';
+                    data.list = lenInputs[1].value || 'my_list';
+                    break;
+                    
+                case 'create_dict':
+                    data.variable = block.querySelector('input').value || 'my_dict';
+                    break;
+                    
+                case 'set_dict_item':
+                    const setDictInputs = block.querySelectorAll('input');
+                    data.dict = setDictInputs[0].value || 'my_dict';
+                    data.key = setDictInputs[1].value || 'key';
+                    data.value = setDictInputs[2].value || '0';
+                    break;
+                    
+                case 'get_dict_item':
+                    const getDictInputs = block.querySelectorAll('input');
+                    data.variable = getDictInputs[0].value || 'value';
+                    data.dict = getDictInputs[1].value || 'my_dict';
+                    data.key = getDictInputs[2].value || 'key';
+                    break;
+                    
+                case 'get_input':
+                    const inputInputs = block.querySelectorAll('input');
+                    data.variable = inputInputs[0].value || 'user_input';
+                    data.prompt = inputInputs[1].value || 'Enter value:';
+                    break;
+                    
+                case 'print_formatted':
+                    data.text = block.querySelector('input').value || '';
+                    break;
+                    
+                case 'define_function':
+                    const defInputs = block.querySelectorAll('input');
+                    data.name = defInputs[0].value || 'my_function';
+                    data.parameters = defInputs[1].value || '';
+                    data.blocks = [];
+                    break;
+                    
+                case 'call_function':
+                    const callInputs = block.querySelectorAll('input');
+                    data.name = callInputs[0].value || 'my_function';
+                    data.arguments = callInputs[1].value || '';
+                    break;
+                    
+                case 'wait':
+                    data.seconds = block.querySelector('input').value || '1';
+                    break;
+                    
+                case 'try_except':
+                    data.try_blocks = [];
+                    data.except_blocks = [];
+                    break;
+            }
+
+            return data;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Clear workspace
+        document.getElementById('clearBtn').addEventListener('click', () => {
+            if (confirm('Are you sure you want to clear the workspace?')) {
+                workspace.innerHTML = '<p class="placeholder">Drag blocks here to start coding!</p>';
+            }
+        });
+
+        // Clear output
+        document.getElementById('clearOutputBtn').addEventListener('click', () => {
+            document.getElementById('output').innerHTML = '';
+            document.getElementById('generatedCode').textContent = '';
+        });
+
+        // Copy code
+        document.getElementById('copyCodeBtn').addEventListener('click', () => {
+            const code = document.getElementById('generatedCode').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                const btn = document.getElementById('copyCodeBtn');
+                const originalText = btn.textContent;
+                btn.textContent = '✓ Copied!';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                }, 2000);
+            });
+        });
+    </script>
+</body>
+</html>

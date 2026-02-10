@@ -1,0 +1,416 @@
+/* Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1800px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+/* Header */
+header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 30px;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+}
+
+/* Main Content Layout */
+.main-content {
+    display: grid;
+    grid-template-columns: 300px 1fr 400px;
+    gap: 0;
+    height: calc(100vh - 200px);
+    min-height: 600px;
+}
+
+/* Block Palette */
+.block-palette {
+    background: #f8f9fa;
+    border-right: 2px solid #e0e0e0;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.block-palette h2 {
+    font-size: 1.3em;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Category Sections */
+.category {
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    background: white;
+}
+
+.category-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 12px 15px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    user-select: none;
+}
+
+.category-header:hover {
+    opacity: 0.9;
+}
+
+.category-content {
+    padding: 10px;
+    display: block;
+}
+
+.arrow {
+    font-size: 0.8em;
+    transition: transform 0.3s;
+}
+
+/* Block Styles */
+.block {
+    background: white;
+    border: 2px solid #333;
+    border-radius: 8px;
+    padding: 12px;
+    margin: 8px 0;
+    cursor: move;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-wrap: wrap;
+    position: relative;
+}
+
+.block:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.block-label {
+    font-weight: bold;
+    font-size: 0.75em;
+    color: #666;
+    width: 100%;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+/* Block Type Colors */
+.block-basic {
+    background: #e3f2fd;
+    border-color: #2196f3;
+}
+
+.block-math {
+    background: #f3e5f5;
+    border-color: #9c27b0;
+}
+
+.block-control {
+    background: #fff3e0;
+    border-color: #ff9800;
+}
+
+.block-data {
+    background: #e8f5e9;
+    border-color: #4caf50;
+}
+
+.block-io {
+    background: #ffebee;
+    border-color: #f44336;
+}
+
+.block-advanced {
+    background: #eceff1;
+    border-color: #607d8b;
+}
+
+/* Input Fields in Blocks */
+.block-input {
+    padding: 4px 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.9em;
+    flex: 1;
+    min-width: 60px;
+}
+
+.block-input.small {
+    flex: 0.5;
+    min-width: 50px;
+}
+
+.block-input.tiny {
+    flex: 0.3;
+    min-width: 40px;
+}
+
+.block-select {
+    padding: 4px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.9em;
+    background: white;
+}
+
+/* Workspace */
+.workspace {
+    background: white;
+    padding: 20px;
+    overflow-y: auto;
+    border-right: 2px solid #e0e0e0;
+}
+
+.workspace-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.workspace-header h2 {
+    font-size: 1.5em;
+    color: #333;
+}
+
+.workspace-controls {
+    display: flex;
+    gap: 10px;
+}
+
+.drop-zone {
+    min-height: 400px;
+    background: #fafafa;
+    border: 3px dashed #ddd;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.placeholder {
+    text-align: center;
+    color: #999;
+    font-size: 1.2em;
+    padding: 50px;
+}
+
+/* Workspace Blocks */
+.workspace-block {
+    margin-bottom: 10px;
+    position: relative;
+    cursor: move;
+}
+
+.workspace-block.dragging {
+    opacity: 0.5;
+}
+
+.delete-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: #f44336;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    font-size: 1.2em;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+.delete-btn:hover {
+    background: #d32f2f;
+}
+
+/* Output Panel */
+.output-panel {
+    background: #f8f9fa;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.output-header, .code-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.output-header h2, .code-header h2 {
+    font-size: 1.2em;
+    color: #333;
+}
+
+.output-content {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    min-height: 150px;
+    max-height: 300px;
+    overflow-y: auto;
+    font-family: 'Courier New', monospace;
+}
+
+.code-content {
+    background: #2d2d2d;
+    color: #f8f8f2;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    min-height: 200px;
+    max-height: 400px;
+    overflow: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    line-height: 1.5;
+}
+
+.success {
+    color: #4caf50;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.error {
+    color: #f44336;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* Buttons */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: bold;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+}
+
+.btn-small {
+    padding: 6px 12px;
+    font-size: 0.85em;
+    background: #e0e0e0;
+    color: #333;
+}
+
+.btn-small:hover {
+    background: #d0d0d0;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Responsive Design */
+@media (max-width: 1400px) {
+    .main-content {
+        grid-template-columns: 280px 1fr 350px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .main-content {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr auto;
+        height: auto;
+    }
+    
+    .block-palette, .output-panel {
+        max-height: 400px;
+    }
+}
+
+/* Animation for drag effects */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+.block:active {
+    animation: pulse 0.5s ease-in-out;
+}
