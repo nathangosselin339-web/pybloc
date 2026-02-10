@@ -11,6 +11,16 @@ def index():
 
 @app.route('/execute', methods=['POST'])
 def execute_code():
+    """
+    Execute Python code generated from block structure.
+    
+    Security Note: This uses exec() with a restricted global namespace.
+    For production use, consider:
+    - Using RestrictedPython for better sandboxing
+    - Adding resource limits (CPU, memory, execution time)
+    - Implementing AST validation before execution
+    - Running code in isolated containers or processes
+    """
     try:
         blocks = request.json.get('blocks', [])
         code = generate_code(blocks)
@@ -20,6 +30,9 @@ def execute_code():
         sys.stdout = StringIO()
         
         # Create execution context with limited globals
+        import random
+        import time
+        
         exec_globals = {
             '__builtins__': {
                 'print': print,
@@ -37,6 +50,8 @@ def execute_code():
                 'sum': sum,
                 'round': round,
             },
+            'random': random,
+            'time': time,
             'input': lambda prompt='': prompt  # Mock input for web environment
         }
         
@@ -130,9 +145,6 @@ def generate_code(blocks, indent_level=0):
             min_val = block.get('min', '0')
             max_val = block.get('max', '10')
             var_name = block.get('variable', 'random_num')
-            # Add random import if not already present
-            if not any('import random' in line for line in code_lines):
-                code_lines.insert(0, 'import random')
             code_lines.append(f"{indent}{var_name} = random.randint({min_val}, {max_val})")
             
         # Control flow - If statement
@@ -269,8 +281,6 @@ def generate_code(blocks, indent_level=0):
         # Wait/Sleep
         elif block_type == 'wait':
             seconds = block.get('seconds', '1')
-            if not any('import time' in line for line in code_lines):
-                code_lines.insert(0, 'import time')
             code_lines.append(f"{indent}time.sleep({seconds})")
             
         # Try/Except
