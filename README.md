@@ -1,8 +1,19 @@
 # 🐍 PyBloc - Visual Python Programming for Everyone!
 
+![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Flask](https://img.shields.io/badge/Flask-2.0+-000000?style=for-the-badge&logo=flask&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
+![Blockly](https://img.shields.io/badge/Blockly-4285F4?style=for-the-badge&logo=google&logoColor=white)
+
 **Build Python programs by snapping blocks together - no typing required!**
 
 🎮 **Live Demo:** Coming Soon to pybloc.dev
+
+[![GitHub stars](https://img.shields.io/github/stars/nathangosselin339-web/pybloc?style=social)](https://github.com/nathangosselin339-web/pybloc)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 
 ---
 
@@ -99,10 +110,22 @@ Perfect for:
 
 ## 🛠️ Tech Stack
 
-- **Backend:** Python + Flask
-- **Frontend:** Blockly (Google's visual programming library)
-- **Code Generation:** Real-time Python code generation
-- **Execution:** Sandboxed Python environment
+### Backend
+- ![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white) **Python 3.8+** - Core programming language
+- ![Flask](https://img.shields.io/badge/Flask-000000?style=flat&logo=flask&logoColor=white) **Flask** - Web framework for server
+- **Sandboxed Execution** - Safe Python code execution
+
+### Frontend
+- ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white) **HTML5** - Structure and layout
+- ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white) **CSS3** - Styling and responsive design
+- ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black) **JavaScript (ES6+)** - Interactive functionality
+- ![Blockly](https://img.shields.io/badge/Blockly-4285F4?style=flat&logo=google&logoColor=white) **Google Blockly** - Visual block programming library
+
+### Features
+- **Real-time Code Generation** - Convert blocks to Python instantly
+- **Mobile Responsive** - Touch-friendly drag-and-drop
+- **Category System** - Organized block toolbox
+- **Undo/Redo** - Full workspace history
 
 ---
 
@@ -126,8 +149,6 @@ MIT License - feel free to use PyBloc however you want!
 ## ⭐ Show Your Support
 
 If you find PyBloc useful, please give it a star! ⭐
-
-[![GitHub stars](https://img.shields.io/github/stars/nathangosselin339-web/pybloc?style=social)](https://github.com/nathangosselin339-web/pybloc)
 
 ---
 
