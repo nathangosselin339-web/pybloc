@@ -13,6 +13,15 @@
             <p class="subtitle">Drag blocks to create Python code!</p>
         </header>
 
+        <!-- Mobile Navigation Tabs -->
+        <div class="mobile-nav">
+            <div class="mobile-nav-tabs">
+                <button class="mobile-tab active" data-view="palette" onclick="switchMobileView('palette')">📝 Blocks</button>
+                <button class="mobile-tab" data-view="workspace" onclick="switchMobileView('workspace')">⚙️ Workspace</button>
+                <button class="mobile-tab" data-view="output" onclick="switchMobileView('output')">📊 Output</button>
+            </div>
+        </div>
+
         <div class="main-content">
             <!-- Block Palette -->
             <aside class="block-palette">
@@ -320,6 +329,10 @@
     </div>
 
     <script>
+        // Constants
+        const MOBILE_BREAKPOINT = 768;
+        const TOUCH_DRAG_DELAY = 200; // milliseconds - prevents accidental drags during scrolling
+        
         let draggedBlock = null;
         let blockIdCounter = 0;
 
@@ -336,6 +349,209 @@
                 arrow.textContent = '▶';
             }
         }
+
+        // Mobile view switching
+        function switchMobileView(view) {
+            const palette = document.querySelector('.block-palette');
+            const workspace = document.querySelector('.workspace');
+            const outputPanel = document.querySelector('.output-panel');
+            const tabs = document.querySelectorAll('.mobile-tab');
+            
+            // Remove all active classes and mobile-hidden
+            tabs.forEach(tab => tab.classList.remove('active'));
+            palette.classList.remove('mobile-hidden');
+            workspace.classList.remove('mobile-hidden');
+            outputPanel.classList.remove('mobile-hidden');
+            
+            // Show only the selected view on mobile
+            if (window.innerWidth <= MOBILE_BREAKPOINT) {
+                if (view === 'palette') {
+                    workspace.classList.add('mobile-hidden');
+                    outputPanel.classList.add('mobile-hidden');
+                    tabs[0].classList.add('active');
+                } else if (view === 'workspace') {
+                    palette.classList.add('mobile-hidden');
+                    outputPanel.classList.add('mobile-hidden');
+                    tabs[1].classList.add('active');
+                } else if (view === 'output') {
+                    palette.classList.add('mobile-hidden');
+                    workspace.classList.add('mobile-hidden');
+                    tabs[2].classList.add('active');
+                }
+            }
+        }
+
+        // Initialize mobile view
+        if (window.innerWidth <= MOBILE_BREAKPOINT) {
+            switchMobileView('palette');
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > MOBILE_BREAKPOINT) {
+                // Remove mobile-hidden class on desktop
+                document.querySelector('.block-palette').classList.remove('mobile-hidden');
+                document.querySelector('.workspace').classList.remove('mobile-hidden');
+                document.querySelector('.output-panel').classList.remove('mobile-hidden');
+            } else {
+                // Re-initialize mobile view
+                const activeTab = document.querySelector('.mobile-tab.active');
+                if (activeTab) {
+                    const view = activeTab.getAttribute('data-view') || 'palette';
+                    switchMobileView(view);
+                }
+            }
+        });
+
+        // Touch event handlers for drag and drop
+        let touchDraggedBlock = null;
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let isDragging = false;
+        let dragPreview = null;
+        let touchTimeout = null;
+
+        function createDragPreview(block, x, y) {
+            const preview = block.cloneNode(true);
+            preview.style.position = 'fixed';
+            preview.style.left = x + 'px';
+            preview.style.top = y + 'px';
+            preview.style.opacity = '0.7';
+            preview.style.pointerEvents = 'none';
+            preview.style.zIndex = '10000';
+            preview.style.transform = 'scale(1.05)';
+            document.body.appendChild(preview);
+            return preview;
+        }
+
+        function handleTouchStart(e, block) {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'BUTTON') {
+                return; // Don't interfere with inputs
+            }
+            
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+            
+            // Clear any existing timeout
+            if (touchTimeout) {
+                clearTimeout(touchTimeout);
+            }
+            
+            // Set a timeout to start dragging
+            touchTimeout = setTimeout(() => {
+                isDragging = true;
+                
+                if (block.classList.contains('workspace-block')) {
+                    touchDraggedBlock = block;
+                    block.classList.add('dragging');
+                } else {
+                    // Clone block from palette
+                    const clone = block.cloneNode(true);
+                    clone.id = 'block-' + blockIdCounter++;
+                    clone.classList.add('workspace-block');
+                    touchDraggedBlock = clone;
+                }
+                
+                dragPreview = createDragPreview(touchDraggedBlock, touchStartX, touchStartY);
+                
+                // Prevent scrolling during drag
+                document.body.style.overflow = 'hidden';
+            }, TOUCH_DRAG_DELAY);
+            
+            // Store cleanup handlers
+            const clearTouchTimeout = () => {
+                if (touchTimeout) {
+                    clearTimeout(touchTimeout);
+                    touchTimeout = null;
+                }
+            };
+            
+            block.addEventListener('touchend', clearTouchTimeout, { once: true });
+            block.addEventListener('touchmove', clearTouchTimeout, { once: true });
+        }
+
+        function handleTouchMove(e) {
+            if (!isDragging || !touchDraggedBlock) return;
+            
+            e.preventDefault();
+            const touch = e.touches[0];
+            
+            if (dragPreview) {
+                dragPreview.style.left = touch.clientX + 'px';
+                dragPreview.style.top = touch.clientY + 'px';
+            }
+        }
+
+        function handleTouchEnd(e) {
+            if (!isDragging || !touchDraggedBlock) {
+                isDragging = false;
+                return;
+            }
+            
+            const touch = e.changedTouches[0];
+            const workspaceEl = document.getElementById('workspace');
+            const workspaceRect = workspaceEl.getBoundingClientRect();
+            
+            // Check if dropped in workspace
+            if (touch.clientX >= workspaceRect.left && touch.clientX <= workspaceRect.right &&
+                touch.clientY >= workspaceRect.top && touch.clientY <= workspaceRect.bottom) {
+                
+                // Remove placeholder if exists
+                const placeholder = workspaceEl.querySelector('.placeholder');
+                if (placeholder) {
+                    placeholder.remove();
+                }
+                
+                // Add delete button if new block from palette
+                if (!touchDraggedBlock.classList.contains('dragging')) {
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = 'delete-btn';
+                    deleteBtn.textContent = '×';
+                    const blockToDelete = touchDraggedBlock;
+                    deleteBtn.onclick = (e) => {
+                        e.stopPropagation();
+                        blockToDelete.remove();
+                        if (workspaceEl.children.length === 0) {
+                            workspaceEl.innerHTML = '<p class="placeholder">Drag blocks here to start coding!</p>';
+                        }
+                    };
+                    touchDraggedBlock.appendChild(deleteBtn);
+                    
+                    // Enable dragging on workspace blocks
+                    touchDraggedBlock.addEventListener('touchstart', (e) => handleTouchStart(e, touchDraggedBlock));
+                    
+                    workspaceEl.appendChild(touchDraggedBlock);
+                } else {
+                    touchDraggedBlock.classList.remove('dragging');
+                }
+                
+                // Switch to workspace view on mobile after dropping
+                if (window.innerWidth <= MOBILE_BREAKPOINT) {
+                    switchMobileView('workspace');
+                }
+            } else if (touchDraggedBlock.classList.contains('dragging')) {
+                // If dragging existing block and not dropped in workspace, keep it
+                touchDraggedBlock.classList.remove('dragging');
+            }
+            
+            // Cleanup
+            if (dragPreview) {
+                dragPreview.remove();
+                dragPreview = null;
+            }
+            
+            touchDraggedBlock = null;
+            isDragging = false;
+            document.body.style.overflow = '';
+        }
+
+        // Add touch event listeners to palette blocks
+        document.querySelectorAll('.block-palette .block').forEach(block => {
+            block.addEventListener('touchstart', (e) => handleTouchStart(e, block), { passive: false });
+        });
+
+        document.addEventListener('touchmove', handleTouchMove, { passive: false });
+        document.addEventListener('touchend', handleTouchEnd, { passive: false });
 
         // Drag and drop functionality
         document.querySelectorAll('.block-palette .block').forEach(block => {
