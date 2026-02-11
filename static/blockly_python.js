@@ -234,7 +234,7 @@ Blockly.Python.forBlock['try_except'] = function(block, generator) {
     tryBranch = generator.PASS;
   }
   if (!exceptBranch) {
-    exceptBranch = '  print(f\'Error: {e}\')\n';
+    exceptBranch = generator.INDENT + 'print(f\'Error: {e}\')\n';
   }
   
   return 'try:\n' + tryBranch + 'except Exception as e:\n' + exceptBranch;
