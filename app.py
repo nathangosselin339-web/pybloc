@@ -22,8 +22,11 @@ def execute_code():
     - Running code in isolated containers or processes
     """
     try:
-        blocks = request.json.get('blocks', [])
-        code = generate_code(blocks)
+        # Support both direct code (from Blockly) and blocks (from old UI)
+        code = request.json.get('code', None)
+        if code is None:
+            blocks = request.json.get('blocks', [])
+            code = generate_code(blocks)
         
         # Capture output
         old_stdout = sys.stdout
