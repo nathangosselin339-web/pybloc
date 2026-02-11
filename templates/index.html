@@ -16,9 +16,9 @@
         <!-- Mobile Navigation Tabs -->
         <div class="mobile-nav">
             <div class="mobile-nav-tabs">
-                <button class="mobile-tab active" onclick="switchMobileView('palette')">📝 Blocks</button>
-                <button class="mobile-tab" onclick="switchMobileView('workspace')">⚙️ Workspace</button>
-                <button class="mobile-tab" onclick="switchMobileView('output')">📊 Output</button>
+                <button class="mobile-tab active" data-view="palette" onclick="switchMobileView('palette')">📝 Blocks</button>
+                <button class="mobile-tab" data-view="workspace" onclick="switchMobileView('workspace')">⚙️ Workspace</button>
+                <button class="mobile-tab" data-view="output" onclick="switchMobileView('output')">📊 Output</button>
             </div>
         </div>
 
@@ -329,6 +329,10 @@
     </div>
 
     <script>
+        // Constants
+        const MOBILE_BREAKPOINT = 768;
+        const TOUCH_DRAG_DELAY = 200; // milliseconds - prevents accidental drags during scrolling
+        
         let draggedBlock = null;
         let blockIdCounter = 0;
 
@@ -360,7 +364,7 @@
             outputPanel.classList.remove('mobile-hidden');
             
             // Show only the selected view on mobile
-            if (window.innerWidth <= 768) {
+            if (window.innerWidth <= MOBILE_BREAKPOINT) {
                 if (view === 'palette') {
                     workspace.classList.add('mobile-hidden');
                     outputPanel.classList.add('mobile-hidden');
@@ -378,13 +382,13 @@
         }
 
         // Initialize mobile view
-        if (window.innerWidth <= 768) {
+        if (window.innerWidth <= MOBILE_BREAKPOINT) {
             switchMobileView('palette');
         }
 
         // Handle window resize
         window.addEventListener('resize', () => {
-            if (window.innerWidth > 768) {
+            if (window.innerWidth > MOBILE_BREAKPOINT) {
                 // Remove mobile-hidden class on desktop
                 document.querySelector('.block-palette').classList.remove('mobile-hidden');
                 document.querySelector('.workspace').classList.remove('mobile-hidden');
@@ -393,10 +397,8 @@
                 // Re-initialize mobile view
                 const activeTab = document.querySelector('.mobile-tab.active');
                 if (activeTab) {
-                    const tabText = activeTab.textContent.toLowerCase();
-                    if (tabText.includes('blocks')) switchMobileView('palette');
-                    else if (tabText.includes('workspace')) switchMobileView('workspace');
-                    else if (tabText.includes('output')) switchMobileView('output');
+                    const view = activeTab.getAttribute('data-view') || 'palette';
+                    switchMobileView(view);
                 }
             }
         });
@@ -407,6 +409,7 @@
         let touchStartY = 0;
         let isDragging = false;
         let dragPreview = null;
+        let touchTimeout = null;
 
         function createDragPreview(block, x, y) {
             const preview = block.cloneNode(true);
@@ -429,8 +432,13 @@
             touchStartX = e.touches[0].clientX;
             touchStartY = e.touches[0].clientY;
             
+            // Clear any existing timeout
+            if (touchTimeout) {
+                clearTimeout(touchTimeout);
+            }
+            
             // Set a timeout to start dragging
-            const touchTimeout = setTimeout(() => {
+            touchTimeout = setTimeout(() => {
                 isDragging = true;
                 
                 if (block.classList.contains('workspace-block')) {
@@ -448,10 +456,18 @@
                 
                 // Prevent scrolling during drag
                 document.body.style.overflow = 'hidden';
-            }, 200);
+            }, TOUCH_DRAG_DELAY);
             
-            block.addEventListener('touchend', () => clearTimeout(touchTimeout), { once: true });
-            block.addEventListener('touchmove', () => clearTimeout(touchTimeout), { once: true });
+            // Store cleanup handlers
+            const clearTouchTimeout = () => {
+                if (touchTimeout) {
+                    clearTimeout(touchTimeout);
+                    touchTimeout = null;
+                }
+            };
+            
+            block.addEventListener('touchend', clearTouchTimeout, { once: true });
+            block.addEventListener('touchmove', clearTouchTimeout, { once: true });
         }
 
         function handleTouchMove(e) {
@@ -510,7 +526,7 @@
                 }
                 
                 // Switch to workspace view on mobile after dropping
-                if (window.innerWidth <= 768) {
+                if (window.innerWidth <= MOBILE_BREAKPOINT) {
                     switchMobileView('workspace');
                 }
             } else if (touchDraggedBlock.classList.contains('dragging')) {
