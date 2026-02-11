@@ -1,0 +1,24 @@
+{
+  "name": "pybloc",
+  "version": "1.0.0",
+  "description": "PyBloc is a visual block-based coding website where you can learn Python in the easiest way possible! It's similar to Scratch and EduBlocks, making programming accessible and fun.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nathangosselin339-web/pybloc.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/nathangosselin339-web/pybloc/issues"
+  },
+  "homepage": "https://github.com/nathangosselin339-web/pybloc#readme",
+  "dependencies": {
+    "blockly": "^12.3.1"
+  }
+}
